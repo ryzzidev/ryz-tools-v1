@@ -3,136 +3,217 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>SPAM TELE RYZZI</title>
+    <title>RYZ TOOLS V1</title>
     
-    <!-- PWA Manifest & Meta Tags Resmi -->
-    <link rel="manifest" href="./manifest.json">
     <meta name="theme-color" content="#000000">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <link rel="apple-touch-icon" href="https://files.catbox.moe/tery5s.png">
-
-    <!-- Tailwind CSS Play CDN Stable (Dijamin Warna Muncul & Ringan di HP) -->
-    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4.0.0-alpha.32/dist/index.global.js"></script>
+    <link rel="manifest" href="manifest.json">
+    <link class="apple-touch-icon" href="https://files.catbox.moe/70xerl.png">
+    
+    <!-- Menghubungkan file CSS external -->
     <link rel="stylesheet" href="style.css">
 </head>
-<body id="app-body" class="bg-black text-white font-sans antialiased min-h-screen flex flex-col justify-between selection:bg-neutral-800 px-4 md:px-0">
+<body>
 
-    <!-- Audio Player dengan preload agar lagu langsung siap diputar secara smooth -->
     <audio id="bg-music" src="https://files.catbox.moe/5a1g2l.mp4" loop preload="auto"></audio>
 
-    <!-- ================= SPLASH SCREEN / LOADING (10 DETIK) ================= -->
-    <div id="splash-screen" class="fixed inset-0 bg-black flex flex-col justify-center items-center p-6 z-50 transition-opacity duration-500">
-        <div class="w-full max-w-sm text-center flex flex-col items-center gap-6">
-            
-            <!-- Video Splash Screen -->
-            <video class="w-full aspect-[16/9] object-cover rounded-xl shadow-2xl border border-neutral-800" autoplay loop muted playsinline preload="auto">
-                <source src="https://files.catbox.moe/nvrqlv.mp4" type="video/mp4">
-            </video>
-            
-            <h1 class="text-3xl font-extrabold tracking-wider text-white uppercase drop-shadow-md">
-                SPAM TELE RYZZI
-            </h1>
-
-            <!-- Loading Bar -->
-            <div class="w-full bg-neutral-900 rounded-full h-2 mt-4 overflow-hidden border border-neutral-800">
-                <div id="progress-bar" class="bg-white h-full w-0 transition-all duration-1000 ease-linear"></div>
-            </div>
-            <p id="countdown" class="text-xs text-neutral-400 font-mono tracking-widest mt-1">SISA WAKTU: 10 DETIK</p>
+    <!-- SPLASH SCREEN -->
+    <div id="splash-screen">
+        <div class="splash-content">
+            <img class="image-box" src="https://files.catbox.moe/70xerl.png" alt="Loading">
+            <h1>RYZ TOOLS V1</h1>
+            <div class="progress-container"><div id="progress-bar"></div></div>
+            <p id="countdown" class="countdown-text">SISA WAKTU: 10 DETIK</p>
         </div>
     </div>
 
-    <!-- ================= MAIN MENU APP ================= -->
-    <div id="main-menu" class="hidden w-full max-w-sm mx-auto flex-1 flex flex-col gap-4 pt-2 pb-8">
+    <!-- LOGIN SCREEN -->
+    <div id="login-screen" class="hidden">
+        <img src="https://files.catbox.moe/w0jf8q.png" class="login-avatar" alt="User Avatar">
+        <h1 class="login-title">WELCOME</h1>
+        <p class="login-subtitle">Sign in to continue</p>
+        <div class="login-card">
+            <div class="login-group">
+                <input type="text" id="username" class="login-input" placeholder="Username" autocomplete="off">
+            </div>
+            <div class="login-group">
+                <input type="password" id="password" class="login-input" placeholder="Password">
+            </div>
+            <button onclick="handleLogin()" class="login-btn">SIGN IN</button>
+        </div>
+        <p class="login-footer">&copy; 2026 RyzziSiber &bull; Ryz Tools</p>
+    </div>
+
+    <!-- MAIN MENU CONTROLLER -->
+    <div id="main-menu" class="hidden">
         
-        <!-- Video Atas -->
-        <div class="w-full mt-2">
-            <video class="w-full aspect-[21/9] object-cover rounded-xl border border-neutral-800 shadow-lg" autoplay loop muted playsinline preload="auto">
-                <source src="https://files.catbox.moe/nvrqlv.mp4" type="video/mp4">
-            </video>
-        </div>
-
-        <div class="text-center relative py-1">
-            <!-- Tombol Musik -->
-            <button onclick="toggleMusic()" class="absolute right-1 top-0 bg-neutral-900 hover:bg-neutral-800 border border-neutral-800 p-2 rounded-full transition-all cursor-pointer group shadow-md" title="Putar Musik">
-                <svg id="music-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4 text-white group-hover:scale-105 transition-transform">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M9 9l10.5-3m0 0L21 18.25m-1.5-12.25v12.25M9 9V21m0-12L3 11.25m6 9.75a3 3 0 11-6 0 3 3 0 016 0zm12-2.25a3 3 0 11-6 0 3 3 0 016 0z" />
-                </svg>
-            </button>
-
-            <h2 class="text-lg font-bold tracking-wide bg-gradient-to-r from-white to-neutral-400 bg-clip-text text-transparent">
-                WELCOME TO APP
-            </h2>
-            <p class="text-[11px] text-neutral-500 mt-0.5">Created by Ryzzi Siber</p>
-        </div>
-
-        <!-- Form Input -->
-        <div class="bg-neutral-950 border border-neutral-900 rounded-2xl p-4 flex flex-col gap-3.5 shadow-xl">
-            
-            <div class="flex flex-col gap-1">
-                <label class="text-[11px] font-semibold uppercase tracking-wider text-neutral-400">Kode Bot Telegram (Token)</label>
-                <input type="text" id="bot-token" placeholder="123456789:ABCdefGhI..." 
-                       class="w-full bg-neutral-900 border border-neutral-800 rounded-xl px-3.5 py-2.5 text-xs focus:outline-none focus:border-neutral-500 transition-colors placeholder:text-neutral-600 font-mono">
+        <!-- HOME PAGE (DASHBOARD) -->
+        <div id="page-home" class="menu-page active">
+            <div class="dashboard-banner">
+                <button onclick="toggleMusic()" class="music-btn">
+                    <svg id="music-icon" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 9l10.5-3m0 0L21 18.25m-1.5-12.25v12.25M9 9V21m0-12L3 11.25m6 9.75a3 3 0 11-6 0 3 3 0 016 0zm12-2.25a3 3 0 11-6 0 3 3 0 016 0z"/>
+                    </svg>
+                </button>
+                <div class="dashboard-title glow-text">RYZ TOOLS V1</div>
+                <div class="dashboard-author">Developer: @RyzziSiber</div>
             </div>
 
-            <div class="flex flex-col gap-1">
-                <label class="text-[11px] font-semibold uppercase tracking-wider text-neutral-400">ID Target</label>
-                <input type="text" id="target-id" placeholder="Masukkan ID Telegram Target" 
-                       class="w-full bg-neutral-900 border border-neutral-800 rounded-xl px-3.5 py-2.5 text-xs focus:outline-none focus:border-neutral-500 transition-colors placeholder:text-neutral-600 font-mono">
-                <span class="text-[9px] text-neutral-500 px-1 mt-0.5">Sebelum kirim spam pastikan target sudah start bot spamnya</span>
-            </div>
-
-            <div class="flex flex-col gap-1">
-                <label class="text-[11px] font-semibold uppercase tracking-wider text-neutral-400">Isi Pesan</label>
-                <textarea id="spam-message" rows="2" placeholder="Tulis pesan yang ingin disampaikan..." 
-                          class="w-full bg-neutral-900 border border-neutral-800 rounded-xl px-3.5 py-2.5 text-xs focus:outline-none focus:border-neutral-500 transition-colors resize-none placeholder:text-neutral-600"></textarea>
-            </div>
-
-            <div class="flex flex-col gap-1">
-                <label class="text-[11px] font-semibold uppercase tracking-wider text-neutral-400">Jumlah Spam</label>
-                <div class="grid grid-cols-3 gap-1.5">
-                    <button type="button" onclick="setCount(20)" class="count-btn bg-neutral-900 border border-neutral-800 rounded-xl py-2 text-xs font-mono font-medium hover:bg-neutral-800 transition-colors cursor-pointer">20</button>
-                    <button type="button" onclick="setCount(30)" class="count-btn bg-neutral-900 border border-neutral-800 rounded-xl py-2 text-xs font-mono font-medium hover:bg-neutral-800 transition-colors cursor-pointer">30</button>
-                    <button type="button" onclick="setCount(50)" class="count-btn bg-neutral-900 border border-neutral-800 rounded-xl py-2 text-xs font-mono font-medium hover:bg-neutral-800 transition-colors cursor-pointer">50</button>
-                    <button type="button" onclick="setCount(70)" class="count-btn bg-neutral-900 border border-neutral-800 rounded-xl py-2 text-xs font-mono font-medium hover:bg-neutral-800 transition-colors cursor-pointer">70</button>
-                    <button type="button" onclick="setCount(100)" class="count-btn bg-neutral-900 border border-neutral-800 rounded-xl py-2 text-xs font-mono font-medium hover:bg-neutral-800 transition-colors cursor-pointer">100</button>
-                    <button type="button" onclick="setCount(120)" class="count-btn bg-neutral-900 border border-neutral-800 rounded-xl py-2 text-xs font-mono font-medium hover:bg-neutral-800 transition-colors cursor-pointer">120</button>
+            <div class="menu-grid">
+                <div class="menu-card" onclick="navigateToPage('spam')">
+                    <div class="icon-wrapper">📨</div>
+                    <div class="title">Spam Tele</div>
+                    <div class="desc">Spam Massal Telegram</div>
                 </div>
-                <input type="hidden" id="spam-count" value="20">
+                <div class="menu-card" onclick="navigateToPage('bug')">
+                    <div class="icon-wrapper">💀</div>
+                    <div class="title">Bugs</div>
+                    <div class="desc">Bug WA</div>
+                </div>
             </div>
 
-            <button id="start-btn" onclick="startSpam()" 
-                    class="w-full bg-white text-black font-bold py-3 rounded-xl uppercase tracking-widest text-xs hover:bg-neutral-200 active:scale-[0.99] transition-all mt-1 cursor-pointer shadow-lg">
-                MULAI SPAM
-            </button>
+            <div class="status-container">
+                <span class="status-icon">👤</span>
+                <span class="status-text">23 User Online</span>
+            </div>
         </div>
 
-        <!-- TERMINAL -->
-        <div class="flex flex-col gap-1 flex-1">
-            <div class="flex justify-between items-center px-1">
-                <label class="text-[11px] font-semibold uppercase tracking-wider text-neutral-400 font-mono flex items-center gap-1.5">
-                    <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span> SYSTEM TERMINAL
-                </label>
-                <button onclick="clearTerminal()" class="text-[9px] text-neutral-500 hover:text-neutral-300 font-mono uppercase">[ Clear ]</button>
+        <!-- SPAM TELEGRAM PAGE -->
+        <div id="page-spam" class="menu-page">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
+                <button class="back-btn" onclick="navigateToTab('home')">← Back to Dashboard</button>
             </div>
-            <div id="terminal" class="w-full flex-1 min-h-[140px] max-h-[180px] bg-neutral-950 border border-neutral-900 rounded-2xl p-3.5 font-mono text-[11px] text-neutral-400 overflow-y-auto custom-scroll flex flex-col gap-1 shadow-inner">
-                <span class="text-neutral-600">Aplikasi siap digunakan...</span>
+            <div class="video-container">
+                <video class="video-banner" autoplay loop muted playsinline>
+                    <source src="https://files.catbox.moe/nvrqlv.mp4" type="video/mp4">
+                </video>
+            </div>
+            <div class="text-center relative" style="padding:4px 0;">
+                <h2 class="title-app">SPAM TELEGRAM</h2>
+                <p class="subtitle-app">Kirim spam massal</p>
+            </div>
+            <div class="card-form">
+                <div class="form-group">
+                    <label class="form-label">Token Bot</label>
+                    <input type="text" id="bot-token" placeholder="123456789:ABCdefGhI..." class="form-input font-mono">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">ID Target</label>
+                    <input type="text" id="target-id" placeholder="Masukkan ID Telegram" class="form-input font-mono">
+                    <span class="help-text">Pastikan target sudah start bot spamnya</span>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Pesan</label>
+                    <textarea id="spam-message" rows="2" placeholder="Tulis pesan..." class="form-input" style="resize:none; font-family:inherit;"></textarea>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Jumlah Spam</label>
+                    <div class="grid-counts">
+                        <button type="button" onclick="setCount(20)" class="count-btn">20</button>
+                        <button type="button" onclick="setCount(30)" class="count-btn">30</button>
+                        <button type="button" onclick="setCount(50)" class="count-btn">50</button>
+                        <button type="button" onclick="setCount(70)" class="count-btn">70</button>
+                        <button type="button" onclick="setCount(100)" class="count-btn">100</button>
+                        <button type="button" onclick="setCount(120)" class="count-btn">120</button>
+                    </div>
+                    <input type="hidden" id="spam-count" value="20">
+                </div>
+                <button id="start-btn" onclick="startSpam()" class="submit-btn">MULAI SPAM</button>
+            </div>
+            <div class="form-group">
+                <div class="terminal-header">
+                    <label class="terminal-title"><span class="pulse-dot"></span> TERMINAL</label>
+                    <button onclick="clearTerminal()" class="clear-btn">[ Clear ]</button>
+                </div>
+                <div id="terminal"><span class="log-muted">Siap digunakan...</span></div>
+            </div>
+        </div>
+
+        <!-- BUG VIRRYZ PAGE -->
+        <div id="page-bug" class="menu-page">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
+                <button class="back-btn" onclick="navigateToTab('home')">← Back to Dashboard</button>
+            </div>
+            <div class="video-container">
+                <video class="video-banner" autoplay loop muted playsinline>
+                    <source src="https://files.catbox.moe/nvrqlv.mp4" type="video/mp4">
+                </video>
+            </div>
+            <div class="text-center relative" style="padding:4px 0;">
+                <h2 class="title-app">BUG VIRRYZ</h2>
+                <p class="subtitle-app">Bug WhatsApp</p>
+            </div>
+            <div class="card-form">
+                <div class="form-group">
+                    <label class="form-label">Target Number</label>
+                    <input type="text" id="bug-target" placeholder="Ex : 62xxxxxx" class="form-input font-mono">
+                    <span class="help-text">Masukkan nomor WhatsApp target lengkap</span>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Select Type Bug's</label>
+                    <div class="bug-options">
+                        <button type="button" onclick="setBugMode(1)" class="bug-btn active" id="bug-1">🔥 FORCLOSE</button>
+                        <button type="button" onclick="setBugMode(2)" class="bug-btn" id="bug-2">❄️ BEKU</button>
+                        <button type="button" onclick="setBugMode(3)" class="bug-btn" id="bug-3">💀 EXTREME</button>
+                    </div>
+                    <input type="hidden" id="bug-mode" value="1">
+                </div>
+                <button onclick="sendBug()" class="send-bug-btn">Send Bug</button>
+            </div>
+            <div class="form-group">
+                <div class="terminal-header">
+                    <label class="terminal-title"><span class="pulse-dot"></span> BUG TERMINAL</label>
+                    <button onclick="clearBugTerminal()" class="clear-btn">[ Clear ]</button>
+                </div>
+                <div id="bug-terminal"><span class="log-muted">Siap mengirim bug...</span></div>
+            </div>
+        </div>
+
+        <!-- STATS / HISTORY PAGE -->
+        <div id="page-stats" class="menu-page">
+            <div class="history-header">
+                <h2 class="history-title">History Logs</h2>
+                <button class="delete-hist-btn" onclick="clearHistory()">🗑</button>
+            </div>
+            <div id="history-container">
+                <div class="empty-history">No history yet :3</div>
+            </div>
+        </div>
+
+        <!-- PROFILE PAGE -->
+        <div id="page-profile" class="menu-page">
+            <div class="dashboard-banner" style="text-align: center; background: #0a0a0a;">
+                <div style="font-size: 40px; margin-bottom: 10px;">👤</div>
+                <div class="dashboard-title" id="profile-role">USER MEMBER</div>
+                <div class="dashboard-author" id="profile-name">Membervip</div>
+                <button onclick="handleLogout()" class="submit-btn" style="margin-top:20px; background:#171717; border:1px solid #550000; color:#ff0000;">LOGOUT</button>
+            </div>
+        </div>
+
+        <!-- BOTTOM NAVIGATION BAR -->
+        <div class="bottom-nav">
+            <div class="nav-item active" id="nav-home" onclick="navigateToTab('home')">
+                <span class="nav-icon">🏠</span>
+                <span>Home</span>
+            </div>
+            <div class="nav-item" id="nav-tools" onclick="navigateToPage('spam')">
+                <span class="nav-icon">🛠</span>
+                <span>Tools</span>
+            </div>
+            <div class="nav-item" id="nav-stats" onclick="navigateToTab('stats')">
+                <span class="nav-icon">📊</span>
+                <span>Stats</span>
+            </div>
+            <div class="nav-item" id="nav-profile" onclick="navigateToTab('profile')">
+                <span class="nav-icon">👤</span>
+                <span>Profile</span>
             </div>
         </div>
 
     </div>
 
+    <!-- Menghubungkan file JavaScript external -->
     <script src="script.js"></script>
-
-    <!-- Registrasi Service Worker PWA Otomatis -->
-    <script>
-        if ('serviceWorker' in navigator) {
-            window.addEventListener('load', () => {
-                navigator.serviceWorker.register('./service-worker.js')
-                    .then(reg => console.log('PWA Service Worker Aktif!', reg.scope))
-                    .catch(err => console.log('PWA gagal terdaftar:', err));
-            });
-        }
-    </script>
 </body>
 </html>
