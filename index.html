@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>SPAM TELE RYZZI</title>
+    
+    <!-- PWA Manifest & Meta Tags Resmi -->
+    <link rel="manifest" href="./manifest.json">
+    <meta name="theme-color" content="#000000">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <link rel="apple-touch-icon" href="https://files.catbox.moe/tery5s.png">
+
+    <!-- Tailwind CSS Play CDN Stable (Dijamin Warna Muncul & Ringan di HP) -->
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4.0.0-alpha.32/dist/index.global.js"></script>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body id="app-body" class="bg-black text-white font-sans antialiased min-h-screen flex flex-col justify-between selection:bg-neutral-800 px-4 md:px-0">
+
+    <!-- Audio Player dengan preload agar lagu langsung siap diputar secara smooth -->
+    <audio id="bg-music" src="https://files.catbox.moe/5a1g2l.mp4" loop preload="auto"></audio>
+
+    <!-- ================= SPLASH SCREEN / LOADING (10 DETIK) ================= -->
+    <div id="splash-screen" class="fixed inset-0 bg-black flex flex-col justify-center items-center p-6 z-50 transition-opacity duration-500">
+        <div class="w-full max-w-sm text-center flex flex-col items-center gap-6">
+            
+            <!-- Video Splash Screen -->
+            <video class="w-full aspect-[16/9] object-cover rounded-xl shadow-2xl border border-neutral-800" autoplay loop muted playsinline preload="auto">
+                <source src="https://files.catbox.moe/nvrqlv.mp4" type="video/mp4">
+            </video>
+            
+            <h1 class="text-3xl font-extrabold tracking-wider text-white uppercase drop-shadow-md">
+                SPAM TELE RYZZI
+            </h1>
+
+            <!-- Loading Bar -->
+            <div class="w-full bg-neutral-900 rounded-full h-2 mt-4 overflow-hidden border border-neutral-800">
+                <div id="progress-bar" class="bg-white h-full w-0 transition-all duration-1000 ease-linear"></div>
+            </div>
+            <p id="countdown" class="text-xs text-neutral-400 font-mono tracking-widest mt-1">SISA WAKTU: 10 DETIK</p>
+        </div>
+    </div>
+
+    <!-- ================= MAIN MENU APP ================= -->
+    <div id="main-menu" class="hidden w-full max-w-sm mx-auto flex-1 flex flex-col gap-4 pt-2 pb-8">
+        
+        <!-- Video Atas -->
+        <div class="w-full mt-2">
+            <video class="w-full aspect-[21/9] object-cover rounded-xl border border-neutral-800 shadow-lg" autoplay loop muted playsinline preload="auto">
+                <source src="https://files.catbox.moe/nvrqlv.mp4" type="video/mp4">
+            </video>
+        </div>
+
+        <div class="text-center relative py-1">
+            <!-- Tombol Musik -->
+            <button onclick="toggleMusic()" class="absolute right-1 top-0 bg-neutral-900 hover:bg-neutral-800 border border-neutral-800 p-2 rounded-full transition-all cursor-pointer group shadow-md" title="Putar Musik">
+                <svg id="music-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4 text-white group-hover:scale-105 transition-transform">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M9 9l10.5-3m0 0L21 18.25m-1.5-12.25v12.25M9 9V21m0-12L3 11.25m6 9.75a3 3 0 11-6 0 3 3 0 016 0zm12-2.25a3 3 0 11-6 0 3 3 0 016 0z" />
+                </svg>
+            </button>
+
+            <h2 class="text-lg font-bold tracking-wide bg-gradient-to-r from-white to-neutral-400 bg-clip-text text-transparent">
+                WELCOME TO APP
+            </h2>
+            <p class="text-[11px] text-neutral-500 mt-0.5">Created by Ryzzi Siber</p>
+        </div>
+
+        <!-- Form Input -->
+        <div class="bg-neutral-950 border border-neutral-900 rounded-2xl p-4 flex flex-col gap-3.5 shadow-xl">
+            
+            <div class="flex flex-col gap-1">
+                <label class="text-[11px] font-semibold uppercase tracking-wider text-neutral-400">Kode Bot Telegram (Token)</label>
+                <input type="text" id="bot-token" placeholder="123456789:ABCdefGhI..." 
+                       class="w-full bg-neutral-900 border border-neutral-800 rounded-xl px-3.5 py-2.5 text-xs focus:outline-none focus:border-neutral-500 transition-colors placeholder:text-neutral-600 font-mono">
+            </div>
+
+            <div class="flex flex-col gap-1">
+                <label class="text-[11px] font-semibold uppercase tracking-wider text-neutral-400">ID Target</label>
+                <input type="text" id="target-id" placeholder="Masukkan ID Telegram Target" 
+                       class="w-full bg-neutral-900 border border-neutral-800 rounded-xl px-3.5 py-2.5 text-xs focus:outline-none focus:border-neutral-500 transition-colors placeholder:text-neutral-600 font-mono">
+                <span class="text-[9px] text-neutral-500 px-1 mt-0.5">Sebelum kirim spam pastikan target sudah start bot spamnya</span>
+            </div>
+
+            <div class="flex flex-col gap-1">
+                <label class="text-[11px] font-semibold uppercase tracking-wider text-neutral-400">Isi Pesan</label>
+                <textarea id="spam-message" rows="2" placeholder="Tulis pesan yang ingin disampaikan..." 
+                          class="w-full bg-neutral-900 border border-neutral-800 rounded-xl px-3.5 py-2.5 text-xs focus:outline-none focus:border-neutral-500 transition-colors resize-none placeholder:text-neutral-600"></textarea>
+            </div>
+
+            <div class="flex flex-col gap-1">
+                <label class="text-[11px] font-semibold uppercase tracking-wider text-neutral-400">Jumlah Spam</label>
+                <div class="grid grid-cols-3 gap-1.5">
+                    <button type="button" onclick="setCount(20)" class="count-btn bg-neutral-900 border border-neutral-800 rounded-xl py-2 text-xs font-mono font-medium hover:bg-neutral-800 transition-colors cursor-pointer">20</button>
+                    <button type="button" onclick="setCount(30)" class="count-btn bg-neutral-900 border border-neutral-800 rounded-xl py-2 text-xs font-mono font-medium hover:bg-neutral-800 transition-colors cursor-pointer">30</button>
+                    <button type="button" onclick="setCount(50)" class="count-btn bg-neutral-900 border border-neutral-800 rounded-xl py-2 text-xs font-mono font-medium hover:bg-neutral-800 transition-colors cursor-pointer">50</button>
+                    <button type="button" onclick="setCount(70)" class="count-btn bg-neutral-900 border border-neutral-800 rounded-xl py-2 text-xs font-mono font-medium hover:bg-neutral-800 transition-colors cursor-pointer">70</button>
+                    <button type="button" onclick="setCount(100)" class="count-btn bg-neutral-900 border border-neutral-800 rounded-xl py-2 text-xs font-mono font-medium hover:bg-neutral-800 transition-colors cursor-pointer">100</button>
+                    <button type="button" onclick="setCount(120)" class="count-btn bg-neutral-900 border border-neutral-800 rounded-xl py-2 text-xs font-mono font-medium hover:bg-neutral-800 transition-colors cursor-pointer">120</button>
+                </div>
+                <input type="hidden" id="spam-count" value="20">
+            </div>
+
+            <button id="start-btn" onclick="startSpam()" 
+                    class="w-full bg-white text-black font-bold py-3 rounded-xl uppercase tracking-widest text-xs hover:bg-neutral-200 active:scale-[0.99] transition-all mt-1 cursor-pointer shadow-lg">
+                MULAI SPAM
+            </button>
+        </div>
+
+        <!-- TERMINAL -->
+        <div class="flex flex-col gap-1 flex-1">
+            <div class="flex justify-between items-center px-1">
+                <label class="text-[11px] font-semibold uppercase tracking-wider text-neutral-400 font-mono flex items-center gap-1.5">
+                    <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span> SYSTEM TERMINAL
+                </label>
+                <button onclick="clearTerminal()" class="text-[9px] text-neutral-500 hover:text-neutral-300 font-mono uppercase">[ Clear ]</button>
+            </div>
+            <div id="terminal" class="w-full flex-1 min-h-[140px] max-h-[180px] bg-neutral-950 border border-neutral-900 rounded-2xl p-3.5 font-mono text-[11px] text-neutral-400 overflow-y-auto custom-scroll flex flex-col gap-1 shadow-inner">
+                <span class="text-neutral-600">Aplikasi siap digunakan...</span>
+            </div>
+        </div>
+
+    </div>
+
+    <script src="script.js"></script>
+
+    <!-- Registrasi Service Worker PWA Otomatis -->
+    <script>
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('./service-worker.js')
+                    .then(reg => console.log('PWA Service Worker Aktif!', reg.scope))
+                    .catch(err => console.log('PWA gagal terdaftar:', err));
+            });
+        }
+    </script>
+</body>
+</html>

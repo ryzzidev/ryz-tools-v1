@@ -1,0 +1,25 @@
+{
+  "name": "SPAM TELE RYZZI",
+  "short_name": "SpamTeleRyzzi",
+  "description": "Aplikasi Utility Spam Telegram oleh RyzziCyber",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#000000",
+  "theme_color": "#000000",
+  "orientation": "portrait-primary",
+  "prefer_related_applications": false,
+  "icons": [
+    {
+      "src": "https://files.catbox.moe/tery5s.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "https://files.catbox.moe/tery5s.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    }
+  ]
+}

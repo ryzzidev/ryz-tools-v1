@@ -1,0 +1,23 @@
+/* Efek Lag Buatan Halus (Tidak Bikin Frame Drop/Lag pada Video & Audio) */
+.lag-effect {
+    animation: smooth-blink 0.8s infinite alternate;
+}
+@keyframes smooth-blink {
+    from { opacity: 0.93; }
+    to { opacity: 1; }
+}
+
+/* Custom Scrollbar untuk Terminal */
+.custom-scroll::-webkit-scrollbar {
+    width: 6px;
+}
+.custom-scroll::-webkit-scrollbar-thumb {
+    background-color: #4b5563;
+    border-radius: 3px;
+}
+
+/* Animasi Putar Lagu */
+@keyframes music-pulse {
+    from { transform: scale(1); opacity: 0.7; }
+    to { transform: scale(1.1); opacity: 1; }
+}
